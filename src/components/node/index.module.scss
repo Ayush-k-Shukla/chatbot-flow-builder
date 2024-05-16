@@ -29,5 +29,5 @@
 .selectedNodeWrapper {
   @extend .nodeWrapper;
 
-  border-color: red;
+  border: 2px solid blue;
 }
