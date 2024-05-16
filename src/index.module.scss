@@ -1,0 +1,13 @@
+.parentWrapper {
+  display: flex;
+
+  .playground {
+    width: 80%;
+    height: 100vh;
+  }
+
+  .sidepanel {
+    width: 20%;
+    height: 100vh;
+  }
+}
