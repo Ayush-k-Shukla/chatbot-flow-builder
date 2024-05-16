@@ -3,9 +3,9 @@ import styles from './index.module.scss';
 
 const Node = ({ selected, data }) => {
   return (
-    <div className={styles.nodeWrapper}>
+    <div className={selected ? styles.selectedNodeWrapper : styles.nodeWrapper}>
       <div className={styles.sendMessageHeader}>
-        <p className=''>✉️ send message</p>
+        <p className={styles.headtext}>✉️ Send Message</p>
       </div>
       <div className={styles.text}>
         <div className=''>{data?.label ?? 'Text Node'}</div>

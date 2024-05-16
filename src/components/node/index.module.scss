@@ -7,17 +7,27 @@
   .sendMessageHeader {
     background-color: bisque;
     padding: 5px;
-    font: bold;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+
+    .headtext {
+      font-size: 8px;
+      font-weight: bold;
+    }
   }
 
   .text {
-    font-size: 15px;
+    font-size: 8px;
     background-color: white;
     padding: 5px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     text-align: center;
   }
+}
+
+.selectedNodeWrapper {
+  @extend .nodeWrapper;
+
+  border-color: red;
 }
