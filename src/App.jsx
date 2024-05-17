@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactFlow, {
   Background,
   Controls,
-  MiniMap,
   addEdge,
   useEdgesState,
   useNodesState,
@@ -11,6 +10,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import ControlPannel from './components/control-panel';
 import Node from './components/node';
+import { generateRandomText } from './core/helper';
 import styles from './index.module.scss';
 
 const initialNodes = [
@@ -22,8 +22,7 @@ const initialNodes = [
   },
 ];
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `dndnode_${generateRandomText(4)}`;
 
 const LOCAL_STORAGE_KEY = 'my-key';
 
@@ -40,7 +39,7 @@ export default function App() {
   useEffect(() => {
     const flow = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
 
-    if (flow) {
+    if (flow && edges.length === 0) {
       const { x = 0, y = 0, zoom = 1 } = flow.viewport;
       setNodes(flow.nodes || []);
       setEdges(flow.edges || []);
@@ -76,7 +75,6 @@ export default function App() {
   // Handles edge connection
   const onConnect = useCallback(
     (params) => {
-      console.log('Edge added- ', params);
       setEdges((eds) => addEdge(params, eds));
     },
     [setEdges]
@@ -122,41 +120,34 @@ export default function App() {
           setShowMessage('');
         }, 2000);
       }
-
-      console.log('dd');
     }
-    console.log('out');
   }, [reactFlowInstance, nodes, getUnconnectedNodes]);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-    console.log('drag star');
   }, []);
 
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-      console.log('drop star');
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
-      console.log(type, reactFlowBounds);
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return;
       }
 
-      const position = reactFlowInstance.project({
-        x: reactFlowBounds.left,
-        y: reactFlowBounds.top,
+      const position = reactFlowInstance.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
       });
       const newNode = {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: { label: `${type}` },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -202,7 +193,6 @@ export default function App() {
           >
             <Background variant='dots' gap={11} size={1} />
             <Controls />
-            <MiniMap zoomable pannable />
           </ReactFlow>
         </div>
         <div className={styles.sidepanel}>
